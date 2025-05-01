@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Class List</title>
+</head>
+<body>
+  <h1 id="greeting">Class List</h1>
+
+  <!-- Cookie name input and save button -->
+  <input type="text" id="username-input" placeholder="Enter your name">
+  <button id="save-username">Save Name</button>
+
+  <br><br>
+
+  <!-- Select property to filter by -->
+  <select id="filter-type">
+    <option value="name">Name</option>
+    <option value="studentNumber">Student Number</option>
+    <option value="yearOfStudy">Year of Study</option>
+  </select>
+
+  <!-- Input for search text -->
+  <input type="text" id="search-text" placeholder="Filter students">
+
+  <!-- Button to show all students -->
+  <button id="showButton">Show All Students</button>
+
+  <!-- Students list will be populated here -->
+  <div id="students"></div>
+
+  <!-- Your existing JS -->
+  <script src="class-list-app.js"></script>
+
+  <!-- NEW: Cookie handling script -->
+  <script>
+    // Save username in a cookie
+    function saveUsername() {
+      const input = document.getElementById('username-input');
+      const username = input.value.trim();
+      if (username) {
+        const now = new Date();
+        const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59); // Dec 31
+        document.cookie = `UserName=${username}; expires=${endOfYear.toUTCString()}; path=/`;
+        showGreeting();
+      }
+    }
+
+    // Read cookie value by name
+    function getCookie(name) {
+      const cookieArray = document.cookie.split(';');
+      for (let cookie of cookieArray) {
+        const [cookieName, cookieValue] = cookie.trim().split('=');
+        if (cookieName === name) {
+          return cookieValue;
+        }
+      }
+      return null;
+    }
+
+    // Display greeting using cookie
+    function showGreeting() {
+      const username = getCookie('UserName');
+      if (username) {
+        document.getElementById('greeting').textContent = `Hello ${username}`;
+      }
+    }
+
+    // When Save button is clicked
+    document.getElementById('save-username').addEventListener('click', saveUsername);
+
+    // On page load
+    window.addEventListener('load', showGreeting);
+  </script>
+
+</body>
+</html>
